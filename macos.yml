@@ -1,0 +1,52 @@
+---
+- name: Install tools on macOS
+  hosts: localhost
+  connection: local
+  tasks:
+
+    - name: Install MacOs Tools
+      homebrew:
+        name: "{{ item }}"
+        state: present
+      loop: 
+        - terragrunt
+        - terraform
+        - htop
+        - terraform-docs
+        - awscli
+        - kubectl
+        - kubectx
+        # - minikube
+        # - kind
+
+    - name: Create file ~/.zshrc
+      command: touch ~/.zshrc
+      become: yes
+      become_user: "{{ ansible_env.USER }}"
+
+    - name: Add alias to kubectl
+      lineinfile:
+        path: ~/.zshrc  # Change with config file if you use a different shell
+        line: "alias k='kubectl'"
+        insertafter: EOF
+        state: present
+      become_user: "{{ ansible_env.USER }}"
+
+        
+    - name: Install MacOs Tools with cask
+      homebrew_cask:
+        name: "{{ item }}"
+        state: present
+      loop: 
+        - iterm2
+        - telegram-desktop
+        - tiles
+        - docker
+        - slack
+        # - lens
+        # - openlens
+        # - dbeaver-community
+        # - pgadmin4
+        # - mongodb-compass
+        # - rancher
+
